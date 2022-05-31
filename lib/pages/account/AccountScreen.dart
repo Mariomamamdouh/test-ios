@@ -1,8 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:launch_review/launch_review.dart';
 import 'package:nyoba/AppLocalizations.dart';
 import 'package:nyoba/constant/constants.dart';
 import 'package:nyoba/pages/language/LanguageScreen.dart';
@@ -53,15 +50,10 @@ class _AccountScreenState extends State<AccountScreen> {
   logout() async {
     final home = Provider.of<HomeProvider>(context, listen: false);
     var auth = FirebaseAuth.instance;
-    final AccessToken accessToken = await FacebookAuth.instance.accessToken;
 
     Session().removeUser();
-    if (auth.currentUser != null) {
-      await GoogleSignIn().signOut();
-    }
-    if (accessToken != null) {
-      await FacebookAuth.instance.logOut();
-    }
+
+
     if (Session.data.getString('login_type') == 'apple') {
       await auth.signOut();
     }
@@ -276,11 +268,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => LanguageScreen()));
                 }),
-            accountButton(
-                "rateapp", AppLocalizations.of(context).translate('rate_app'),
-                func: () {
-                  LaunchReview.launch(androidAppId: packageName);
-                }),
+
             accountButton(
                 "aboutus", AppLocalizations.of(context).translate('about_us'),
                 func: () {
