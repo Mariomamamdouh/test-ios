@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nyoba/pages/search/QRScanner.dart';
 import 'package:nyoba/provider/HomeProvider.dart';
 import 'package:nyoba/provider/SearchProvider.dart';
 import 'package:nyoba/utils/utility.dart';
@@ -88,10 +87,6 @@ class _SearchScreenState extends State<SearchScreen> {
       floatingActionButton: Visibility(
         visible: settingProvider.isBarcodeActive,
         child: InkWell(
-          onTap: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => QRScanner()));
-          },
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             decoration: BoxDecoration(
