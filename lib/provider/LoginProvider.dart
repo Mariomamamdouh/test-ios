@@ -157,20 +157,5 @@ class LoginProvider with ChangeNotifier {
     final digest = sha256.convert(bytes);
     return digest.toString();
   }
-
-  Future<UserCredential> signInWithApple(context) async {
-    // To prevent replay attacks with the credential returned from Apple, we
-    // include a nonce in the credential request. When signing in in with
-    // Firebase, the nonce in the id token returned by Apple, is expected to
-    // match the sha256 hash of `rawNonce`.
-    final firebaseAuth = FirebaseAuth.instance;
-    final rawNonce = generateNonce();
-    final nonce = sha256ofString(rawNonce);
-    String userEmail, userName, displayName;
-
-
-    // Create an `OAuthCredential` from the credential returned by Apple.
-
-
-  }
+  
 }
