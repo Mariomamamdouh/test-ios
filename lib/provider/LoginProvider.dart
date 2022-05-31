@@ -11,7 +11,7 @@ import 'package:nyoba/services/LoginAPI.dart';
 import 'package:nyoba/services/Session.dart';
 import 'package:nyoba/utils/utility.dart';
 import 'package:provider/provider.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
 
 import 'HomeProvider.dart';
 
@@ -46,7 +46,7 @@ class LoginProvider with ChangeNotifier {
               context,
               MaterialPageRoute(
                   builder: (BuildContext context) => HomeScreen()),
-              (Route<dynamic> route) => false);
+                  (Route<dynamic> route) => false);
           inputDeviceToken();
         } else {
           snackBar(context, message: result['message'], color: Colors.red);
@@ -96,14 +96,13 @@ class LoginProvider with ChangeNotifier {
       }
     });
   }
-  
+
 
   String prettyPrint(Map json) {
     JsonEncoder encoder = new JsonEncoder.withIndent('  ');
     String pretty = encoder.convert(json);
     return pretty;
   }
-
 
 
   Future<Map<String, dynamic>> inputDeviceToken() async {
@@ -169,63 +168,9 @@ class LoginProvider with ChangeNotifier {
     final nonce = sha256ofString(rawNonce);
     String userEmail, userName, displayName;
 
-    final appleCredential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-      nonce: nonce,
-    );
-
-    printLog(appleCredential.toString(), name: 'Apple Credential');
 
     // Create an `OAuthCredential` from the credential returned by Apple.
-    final oauthCredential = OAuthProvider("apple.com").credential(
-      idToken: appleCredential.identityToken,
-      rawNonce: rawNonce,
-    );
 
-    printLog(oauthCredential.toString(), name: 'OAUTH');
 
-    final authResult =
-    await firebaseAuth.signInWithCredential(oauthCredential).then((value) async {
-      displayName =
-      '${appleCredential.givenName} ${appleCredential.familyName}';
-      userName =
-      '${appleCredential.familyName}${appleCredential.familyName}';
-
-      if (appleCredential.email != null){
-        userEmail = '${appleCredential.email}';
-        Session.data.setString('email_apple', userEmail);
-      } else {
-        userEmail = Session.data.getString('email_apple');
-      }
-
-      await LoginAPI()
-          .loginByApple(userEmail.toString(), displayName.toString(),
-          userName.toString().toLowerCase())
-          .then((data) {
-        printLog(data.toString(), name: 'API Apple SignIn');
-        if (data['wp_user_id'] != null) {
-          Session.data.setBool('isLogin', true);
-          Session.data.setString("cookie", data['cookie']);
-          Session.data.setString("username", data['user_login']);
-          Session.data.setString("login_type", 'apple');
-
-          final home = Provider.of<HomeProvider>(context, listen: false);
-          home.isReload = true;
-
-          loading = false;
-          inputDeviceToken();
-          notifyListeners();
-          return data;
-        } else {
-          loading = false;
-          notifyListeners();
-          return data;
-        }
-      });
-    });
-    return authResult;
   }
 }
