@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "892704516107",
+    "project_id": "mbaadvisers-4bdaf",
+    "storage_bucket": "mbaadvisers-4bdaf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:892704516107:android:3570efabb9f2c59a05ff0e",
+        "android_client_info": {
+          "package_name": "com.mbaadvisers.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "892704516107-mh3nvjpi7797jo4h5mgsdufmetn412cl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_wOblrqhCom7O0PkVcpSNMf97FCS9rrM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "892704516107-mh3nvjpi7797jo4h5mgsdufmetn412cl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
