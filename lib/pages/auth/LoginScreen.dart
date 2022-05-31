@@ -38,25 +38,6 @@ class _LoginState extends State<Login> {
     }
   }
 
-  loginGoogle() async {
-    loadingPop(context);
-    await Provider.of<LoginProvider>(context, listen: false)
-        .signInWithGoogle(context)
-        .then((value) {
-      if (Session.data.getString('cookie') != null) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (BuildContext context) => HomeScreen()),
-            (Route<dynamic> route) => false);
-      } else {
-        snackBar(context,
-            message:
-                "Invalid error when trying sign in using google, please contact admin or developer",
-            color: Colors.red);
-        Navigator.pop(context);
-      }
-    });
-  }
 
 
 
