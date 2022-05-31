@@ -3,8 +3,6 @@ import 'dart:math';
 import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:nyoba/models/LoginModel.dart';
 import 'package:nyoba/models/UserModel.dart';
 import 'package:nyoba/pages/home/HomeScreen.dart';
@@ -23,7 +21,7 @@ class LoginProvider with ChangeNotifier {
   String message;
   String countryCode = '+62';
 
-  AccessToken fbAccessToken;
+
   Map<String, dynamic> fbUserData;
 
   FirebaseAuth _firebaseAuth;
@@ -98,49 +96,7 @@ class LoginProvider with ChangeNotifier {
       }
     });
   }
-
-  Future signInWithGoogle(context) async {
-    final FirebaseAuth _auth = FirebaseAuth.instance;
-    final GoogleSignIn _googleSignIn = GoogleSignIn();
-
-    GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
-    GoogleSignInAuthentication googleSignInAuthentication =
-        await googleSignInAccount.authentication;
-
-    AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleSignInAuthentication.accessToken,
-      idToken: googleSignInAuthentication.idToken,
-    );
-
-    final UserCredential authResult =
-        await _auth.signInWithCredential(credential);
-    final User user = authResult.user;
-
-    if (user != null) {
-      await LoginAPI()
-          .loginByGoogle(googleSignInAuthentication.accessToken)
-          .then((data) {
-        final responseJson = json.decode(data.body);
-        if (data.statusCode == 200) {
-          Session.data.setBool('isLogin', true);
-          Session.data.setString("cookie", responseJson['cookie']);
-          Session.data.setString("username", responseJson['user_login']);
-          Session.data.setString("login_type", 'google');
-
-          loading = false;
-          final home = Provider.of<HomeProvider>(context, listen: false);
-          home.isReload = true;
-          inputDeviceToken();
-          notifyListeners();
-          return responseJson;
-        } else {
-          loading = false;
-          notifyListeners();
-          return responseJson;
-        }
-      });
-    }
-  }
+  
 
   String prettyPrint(Map json) {
     JsonEncoder encoder = new JsonEncoder.withIndent('  ');
@@ -148,48 +104,7 @@ class LoginProvider with ChangeNotifier {
     return pretty;
   }
 
-  void _printCredentials() {
-    print(
-      prettyPrint(fbAccessToken.toJson()),
-    );
-  }
 
-  Future<void> signInWithFacebook(context) async {
-    final LoginResult result = await FacebookAuth.instance
-        .login(); // by the fault we request the email and the public profilea
-
-    if (result.status == LoginStatus.success) {
-      fbAccessToken = result.accessToken;
-
-      final userData = await FacebookAuth.instance.getUserData();
-      fbUserData = userData;
-      _printCredentials();
-      await LoginAPI().loginByFacebook(fbAccessToken.token).then((data) {
-        final responseJson = json.decode(data.body);
-        if (data.statusCode == 200) {
-          Session.data.setBool('isLogin', true);
-          Session.data.setString("cookie", responseJson['cookie']);
-          Session.data.setString("username", responseJson['user_login']);
-          Session.data.setString("login_type", 'facebook');
-
-          final home = Provider.of<HomeProvider>(context, listen: false);
-          home.isReload = true;
-
-          loading = false;
-          inputDeviceToken();
-          notifyListeners();
-          return responseJson;
-        } else {
-          loading = false;
-          notifyListeners();
-          return responseJson;
-        }
-      });
-    } else {
-      print(result.status);
-      print(result.message);
-    }
-  }
 
   Future<Map<String, dynamic>> inputDeviceToken() async {
     var result;
