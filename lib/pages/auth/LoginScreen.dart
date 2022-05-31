@@ -58,45 +58,8 @@ class _LoginState extends State<Login> {
     });
   }
 
-  loginFacebook() async {
-    loadingPop(context);
-    await Provider.of<LoginProvider>(context, listen: false)
-        .signInWithFacebook(context)
-        .then((value) {
-      if (Session.data.getString('cookie') != null) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (BuildContext context) => HomeScreen()),
-            (Route<dynamic> route) => false);
-      } else {
-        snackBar(context,
-            message:
-                "Invalid error when trying sign in using facebook, please contact admin or developer",
-            color: Colors.red);
-        Navigator.pop(context);
-      }
-    });
-  }
 
-  loginApple() async {
-    loadingPop(context);
-    await Provider.of<LoginProvider>(context, listen: false)
-        .signInWithApple(context)
-        .then((value) {
-      if (Session.data.getString('cookie') != null) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (BuildContext context) => HomeScreen()),
-            (Route<dynamic> route) => false);
-      } else {
-        snackBar(context,
-            message:
-                "Invalid error when trying sign in using apple, please contact admin or developer",
-            color: Colors.red);
-        Navigator.pop(context);
-      }
-    });
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -320,10 +283,7 @@ class _LoginState extends State<Login> {
               // Container(
               //   height: 10,
               // ),
-              if (Platform.isIOS)
-                signInButton(
-                    "${AppLocalizations.of(context).translate('sign_in')} Apple",
-                    "apple"),
+
             ],
           ),
         ),
@@ -338,12 +298,6 @@ class _LoginState extends State<Login> {
           Navigator.push(context,
                   MaterialPageRoute(builder: (context) => SignInOTPScreen()))
               .then((value) => this.setState(() {}));
-        } else if (image == 'google') {
-          loginGoogle();
-        } else if (image == 'facebook') {
-          loginFacebook();
-        } else if (image == 'apple') {
-          loginApple();
         }
       },
       child: Container(
